@@ -207,6 +207,10 @@
   .report-item { font-size: 13px; color: var(--text2); padding: 4px 0; display: flex; align-items: flex-start; gap: 8px; }
   .report-item::before { content: '→'; color: var(--accent); flex-shrink: 0; }
 
+  /* Pricing */
+  .pricing-feat { font-size:13px; color:var(--text2); display:flex; align-items:center; gap:6px; }
+  .pricing-feat-off { font-size:13px; color:var(--text3); display:flex; align-items:center; gap:6px; text-decoration:line-through; }
+
   /* Page visibility */
   .page { display: none; }
   .page.active { display: block; }
@@ -501,6 +505,9 @@
     </div>
 
     <span class="nav-section">Croissance</span>
+    <div class="nav-item" onclick="showPage('pricing',this)">
+      <span class="nav-icon">⭐</span> Upgrade
+    </div>
     <div class="nav-item" onclick="showPage('goals',this)">
       <span class="nav-icon">🎯</span> Objectifs
     </div>
@@ -513,9 +520,9 @@
     </div>
 
     <div class="sidebar-footer">
-      <div class="plan-card">
-        <div class="plan-name">Plan Pro ✓</div>
-        <div class="plan-sub">Toutes les features actives</div>
+      <div class="plan-card" id="sidebar-plan-card" onclick="showPage('pricing', null)" style="cursor:pointer">
+        <div class="plan-name" id="sidebar-plan-name">Plan Free</div>
+        <div class="plan-sub" id="sidebar-plan-sub">Passer à Pro →</div>
       </div>
     </div>
   </aside>
@@ -1017,6 +1024,88 @@
       </div>
     </div>
 
+    <!-- PRICING PAGE -->
+    <div id="page-pricing" class="page content">
+      <div style="max-width:860px;margin:0 auto">
+        <div style="text-align:center;margin-bottom:36px">
+          <div style="font-size:11px;color:var(--accent2);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">Tarifs</div>
+          <h2 style="font-size:28px;font-weight:700;margin-bottom:10px">Choisis ton plan</h2>
+          <p style="color:var(--text3);font-size:14px">Commence gratuitement, upgrade quand tu veux. Annulable à tout moment.</p>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+
+          <!-- FREE -->
+          <div class="card" style="border:1px solid var(--border2)">
+            <div style="margin-bottom:20px">
+              <div style="font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px">Free</div>
+              <div style="font-size:36px;font-weight:700">€0<span style="font-size:14px;font-weight:400;color:var(--text3)">/mois</span></div>
+            </div>
+            <div style="margin-bottom:20px;display:flex;flex-direction:column;gap:8px">
+              <div class="pricing-feat">✓ 1 plateforme connectée</div>
+              <div class="pricing-feat">✓ 7 jours d'historique</div>
+              <div class="pricing-feat">✓ Dashboard de base</div>
+              <div class="pricing-feat-off">✗ Features IA</div>
+              <div class="pricing-feat-off">✗ Viral Score</div>
+              <div class="pricing-feat-off">✗ Hooks IA</div>
+              <div class="pricing-feat-off">✗ Rapport hebdo</div>
+              <div class="pricing-feat-off">✗ Media Kit</div>
+            </div>
+            <button class="btn" style="width:100%" id="plan-free-btn" onclick="selectPlan('free')">Plan actuel</button>
+          </div>
+
+          <!-- PRO -->
+          <div class="card" style="border:1px solid var(--accent);position:relative;overflow:hidden">
+            <div style="position:absolute;top:12px;right:12px;background:var(--accent);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:0.05em">Populaire</div>
+            <div style="margin-bottom:20px">
+              <div style="font-size:12px;color:var(--accent2);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px">Pro</div>
+              <div style="font-size:36px;font-weight:700;color:var(--accent2)">€19<span style="font-size:14px;font-weight:400;color:var(--text3)">/mois</span></div>
+            </div>
+            <div style="margin-bottom:20px;display:flex;flex-direction:column;gap:8px">
+              <div class="pricing-feat">✓ 5 plateformes connectées</div>
+              <div class="pricing-feat">✓ 90 jours d'historique</div>
+              <div class="pricing-feat">✓ Dashboard complet</div>
+              <div class="pricing-feat">✓ Analyseur IA titres</div>
+              <div class="pricing-feat">✓ Viral Score prédictif</div>
+              <div class="pricing-feat">✓ Hooks IA viraux</div>
+              <div class="pricing-feat">✓ Rapport hebdo auto</div>
+              <div class="pricing-feat">✓ Media Kit IA</div>
+            </div>
+            <button class="btn btn-primary" style="width:100%" id="plan-pro-btn" onclick="selectPlan('pro')">Passer à Pro →</button>
+          </div>
+
+          <!-- AGENCY -->
+          <div class="card" style="border:1px solid var(--border2)">
+            <div style="margin-bottom:20px">
+              <div style="font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px">Agency</div>
+              <div style="font-size:36px;font-weight:700">€49<span style="font-size:14px;font-weight:400;color:var(--text3)">/mois</span></div>
+            </div>
+            <div style="margin-bottom:20px;display:flex;flex-direction:column;gap:8px">
+              <div class="pricing-feat">✓ Plateformes illimitées</div>
+              <div class="pricing-feat">✓ 365 jours d'historique</div>
+              <div class="pricing-feat">✓ Tout le plan Pro</div>
+              <div class="pricing-feat">✓ Multi-créateurs</div>
+              <div class="pricing-feat">✓ Export CSV/PDF</div>
+              <div class="pricing-feat">✓ API access</div>
+              <div class="pricing-feat">✓ Support prioritaire</div>
+              <div class="pricing-feat">✓ White-label</div>
+            </div>
+            <button class="btn" style="width:100%;border-color:rgba(124,92,252,0.4);color:var(--accent2)" id="plan-agency-btn" onclick="selectPlan('agency')">Passer à Agency →</button>
+          </div>
+
+        </div>
+
+        <div style="text-align:center;margin-top:24px;font-size:12px;color:var(--text3)">
+          Paiement sécurisé par Stripe · Annulation en 1 clic · Remboursement 14 jours
+        </div>
+
+        <!-- Billing portal -->
+        <div id="billing-portal-section" style="display:none;margin-top:24px;text-align:center">
+          <button class="btn" onclick="openBillingPortal()">⚙️ Gérer mon abonnement</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -1258,6 +1347,8 @@ function enterDashboard() {
   if (planCard) planCard.innerHTML = `<div class="plan-name">${currentUser.name} ✓</div><div class="plan-sub">${currentUser.provider === 'demo' ? 'Mode démo' : 'Plan Pro actif'}</div>`;
   // Init charts
   initCharts();
+  // Load real plan from DB
+  loadUserPlan();
   // Ask for API key if not set
   const savedKey = localStorage.getItem('cs_api_key');
   if (savedKey) { apiKey = savedKey; }
@@ -1637,6 +1728,82 @@ async function runMediaKit() {
     <div style="font-size:12px;white-space:pre-line;line-height:1.7;color:var(--text2);background:var(--bg4);border-radius:8px;padding:12px 14px;margin-bottom:12px">${result.pitch||''}</div>
     ${(result.kpis||[]).map(k=>`<div style="font-size:12px;color:var(--text2);padding:4px 0;display:flex;gap:8px"><span style="color:var(--green)">✓</span>${k}</div>`).join('')}
   </div>`;
+}
+
+// ─── Stripe / Plans ───────────────────────────────
+let currentPlan = 'free';
+
+async function loadUserPlan() {
+  if (!_supabase || !_session) return;
+  try {
+    const res = await fetch('/api/user/me', {
+      headers: { 'Authorization': `Bearer ${_session.access_token}` }
+    });
+    if (!res.ok) return;
+    const data = await res.json();
+    currentPlan = data.subscriptions?.plan || 'free';
+    updatePlanUI(currentPlan);
+  } catch (e) {}
+}
+
+function updatePlanUI(plan) {
+  const nameEl = document.getElementById('sidebar-plan-name');
+  const subEl = document.getElementById('sidebar-plan-sub');
+  const portalSection = document.getElementById('billing-portal-section');
+  if (!nameEl) return;
+
+  if (plan === 'pro') {
+    nameEl.textContent = 'Plan Pro ✓';
+    subEl.textContent = 'Toutes les features actives';
+    if (portalSection) portalSection.style.display = 'block';
+    document.getElementById('plan-pro-btn').textContent = 'Plan actuel';
+    document.getElementById('plan-pro-btn').disabled = true;
+    document.getElementById('plan-agency-btn').textContent = 'Passer à Agency →';
+    document.getElementById('plan-free-btn').textContent = 'Rétrograder';
+  } else if (plan === 'agency') {
+    nameEl.textContent = 'Plan Agency ✓';
+    subEl.textContent = 'Accès complet';
+    if (portalSection) portalSection.style.display = 'block';
+    document.getElementById('plan-agency-btn').textContent = 'Plan actuel';
+    document.getElementById('plan-agency-btn').disabled = true;
+  } else {
+    nameEl.textContent = 'Plan Free';
+    subEl.textContent = 'Passer à Pro →';
+    if (portalSection) portalSection.style.display = 'none';
+  }
+}
+
+async function selectPlan(plan) {
+  if (plan === 'free' || plan === currentPlan) return;
+  if (!_session) {
+    alert('Connecte-toi pour upgrader ton plan.');
+    return;
+  }
+  const btn = document.getElementById('plan-' + plan + '-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Redirection...'; }
+  try {
+    const res = await fetch('/api/stripe/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${_session.access_token}` },
+      body: JSON.stringify({ plan }),
+    });
+    const data = await res.json();
+    if (data.url) { window.location.href = data.url; }
+    else { alert(data.error || 'Erreur Stripe'); if (btn) { btn.disabled = false; btn.textContent = 'Réessayer'; } }
+  } catch (e) {
+    alert('Erreur réseau');
+    if (btn) { btn.disabled = false; btn.textContent = 'Réessayer'; }
+  }
+}
+
+async function openBillingPortal() {
+  if (!_session) return;
+  const res = await fetch('/api/stripe/portal', {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${_session.access_token}` },
+  });
+  const data = await res.json();
+  if (data.url) window.location.href = data.url;
 }
 
 function addGoal() {
