@@ -208,8 +208,48 @@
   .report-item::before { content: '→'; color: var(--accent); flex-shrink: 0; }
 
   /* Pricing */
-  .pricing-feat { font-size:13px; color:var(--text2); display:flex; align-items:center; gap:6px; }
-  .pricing-feat-off { font-size:13px; color:var(--text3); display:flex; align-items:center; gap:6px; text-decoration:line-through; }
+  .pricing-feat { font-size:13px; color:var(--text2); display:flex; align-items:flex-start; gap:8px; }
+  .pricing-feat svg { flex-shrink:0; margin-top:1px; }
+  .pricing-feat-off { font-size:13px; color:var(--text3); display:flex; align-items:flex-start; gap:8px; opacity:0.45; }
+  .pricing-feat-off svg { flex-shrink:0; margin-top:1px; }
+
+  .plan-card-wrap { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:12px; align-items:start; }
+  .plan-card-pro { transform:scale(1.04); z-index:2; }
+
+  .plan-badge { display:inline-flex; align-items:center; gap:5px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; padding:4px 10px; border-radius:20px; margin-bottom:14px; }
+  .plan-badge-popular { background:linear-gradient(135deg,#7c5cfc,#a78bfa); color:#fff; }
+  .plan-badge-agency { background:var(--bg4); color:var(--text3); border:1px solid var(--border2); }
+
+  .plan-name-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; color:var(--text3); margin-bottom:4px; }
+  .plan-price-big { font-size:38px; font-weight:800; line-height:1; }
+  .plan-price-sub { font-size:13px; color:var(--text3); margin-top:4px; }
+  .plan-tagline { font-size:12px; color:var(--text3); margin:12px 0 16px; line-height:1.5; }
+  .plan-divider { height:1px; background:var(--border); margin:16px 0; }
+
+  /* Comparison table */
+  .compare-table { width:100%; border-collapse:collapse; margin-top:8px; }
+  .compare-table th { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.07em; color:var(--text3); padding:10px 14px; text-align:left; border-bottom:1px solid var(--border); }
+  .compare-table th.plan-col { text-align:center; }
+  .compare-table td { padding:11px 14px; font-size:13px; color:var(--text2); border-bottom:1px solid var(--border); }
+  .compare-table td.plan-col { text-align:center; }
+  .compare-table tr:last-child td { border-bottom:none; }
+  .compare-table tr:hover td { background:var(--bg3); }
+  .compare-table .section-row td { background:var(--bg3); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.07em; color:var(--text3); padding:8px 14px; }
+  .compare-check { color:var(--green); font-size:16px; }
+  .compare-dash { color:var(--text3); opacity:0.4; }
+  .compare-pro-col { background:rgba(124,92,252,0.05); }
+
+  /* FAQ */
+  .faq-item { border-bottom:1px solid var(--border); }
+  .faq-q { display:flex; justify-content:space-between; align-items:center; padding:16px 0; cursor:pointer; font-size:14px; font-weight:500; color:var(--text); gap:16px; }
+  .faq-q:hover { color:var(--accent2); }
+  .faq-icon { flex-shrink:0; font-size:18px; color:var(--text3); transition:transform 0.2s; }
+  .faq-a { font-size:13px; color:var(--text3); line-height:1.7; padding-bottom:16px; display:none; }
+  .faq-item.open .faq-a { display:block; }
+  .faq-item.open .faq-icon { transform:rotate(45deg); color:var(--accent2); }
+
+  /* Guarantee */
+  .guarantee-bar { display:flex; align-items:center; justify-content:center; gap:28px; flex-wrap:wrap; margin:28px 0 0; }
 
   /* Page visibility */
   .page { display: none; }
@@ -1027,80 +1067,294 @@
     <!-- PRICING PAGE -->
     <div id="page-pricing" class="page content">
       <div style="max-width:860px;margin:0 auto">
-        <div style="text-align:center;margin-bottom:36px">
-          <div style="font-size:11px;color:var(--accent2);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">Tarifs</div>
-          <h2 style="font-size:28px;font-weight:700;margin-bottom:10px">Choisis ton plan</h2>
-          <p style="color:var(--text3);font-size:14px">Commence gratuitement, upgrade quand tu veux. Annulable à tout moment.</p>
+        <!-- Header -->
+        <div style="text-align:center;margin-bottom:48px">
+          <div style="display:inline-flex;align-items:center;gap:6px;background:var(--accent-bg);border:1px solid rgba(124,92,252,0.25);border-radius:20px;padding:4px 14px;font-size:11px;font-weight:600;color:var(--accent2);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:16px">
+            ✦ Tarifs
+          </div>
+          <h2 style="font-size:32px;font-weight:800;margin-bottom:12px;letter-spacing:-0.02em">Investis dans ta croissance</h2>
+          <p style="color:var(--text3);font-size:15px;max-width:480px;margin:0 auto;line-height:1.6">Les créateurs qui analysent leurs stats croissent <strong style="color:var(--text2)">3× plus vite</strong>. Commence aujourd'hui, annule quand tu veux.</p>
         </div>
 
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+        <!-- Plan cards -->
+        <div class="plan-card-wrap">
 
           <!-- FREE -->
-          <div class="card" style="border:1px solid var(--border2)">
-            <div style="margin-bottom:20px">
-              <div style="font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px">Free</div>
-              <div style="font-size:36px;font-weight:700">€0<span style="font-size:14px;font-weight:400;color:var(--text3)">/mois</span></div>
+          <div class="card" style="border:1px solid var(--border2);padding:24px">
+            <div class="plan-name-label">Free</div>
+            <div class="plan-price-big">€0</div>
+            <div class="plan-price-sub">/mois · pour toujours</div>
+            <div class="plan-tagline">Pour découvrir la plateforme et suivre tes premières stats.</div>
+            <div class="plan-divider"></div>
+            <div style="display:flex;flex-direction:column;gap:9px;margin-bottom:24px">
+              <div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="7" fill="#22c55e" fill-opacity=".15"/><path d="M4 7l2 2 4-4" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>1 plateforme connectée</div>
+              <div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="7" fill="#22c55e" fill-opacity=".15"/><path d="M4 7l2 2 4-4" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>7 jours d'historique</div>
+              <div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="7" fill="#22c55e" fill-opacity=".15"/><path d="M4 7l2 2 4-4" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Dashboard basique</div>
+              <div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="7" fill="#22c55e" fill-opacity=".15"/><path d="M4 7l2 2 4-4" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>5 analyses IA/mois</div>
+              <div class="pricing-feat-off"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="7" fill="currentColor" fill-opacity=".1"/><path d="M5 5l4 4M9 5l-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Viral Score</div>
+              <div class="pricing-feat-off"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="7" fill="currentColor" fill-opacity=".1"/><path d="M5 5l4 4M9 5l-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Hooks IA</div>
+              <div class="pricing-feat-off"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="7" fill="currentColor" fill-opacity=".1"/><path d="M5 5l4 4M9 5l-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Rapport hebdo</div>
             </div>
-            <div style="margin-bottom:20px;display:flex;flex-direction:column;gap:8px">
-              <div class="pricing-feat">✓ 1 plateforme connectée</div>
-              <div class="pricing-feat">✓ 7 jours d'historique</div>
-              <div class="pricing-feat">✓ Dashboard de base</div>
-              <div class="pricing-feat-off">✗ Features IA</div>
-              <div class="pricing-feat-off">✗ Viral Score</div>
-              <div class="pricing-feat-off">✗ Hooks IA</div>
-              <div class="pricing-feat-off">✗ Rapport hebdo</div>
-              <div class="pricing-feat-off">✗ Media Kit</div>
-            </div>
-            <button class="btn" style="width:100%" id="plan-free-btn" onclick="selectPlan('free')">Plan actuel</button>
+            <button class="btn" style="width:100%" id="plan-free-btn" onclick="selectPlan('free')">Commencer gratuitement</button>
           </div>
 
-          <!-- PRO -->
-          <div class="card" style="border:1px solid var(--accent);position:relative;overflow:hidden">
-            <div style="position:absolute;top:12px;right:12px;background:var(--accent);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:0.05em">Populaire</div>
-            <div style="margin-bottom:20px">
-              <div style="font-size:12px;color:var(--accent2);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px">Pro</div>
-              <div style="font-size:36px;font-weight:700;color:var(--accent2)">€19<span style="font-size:14px;font-weight:400;color:var(--text3)">/mois</span></div>
+          <!-- CREATOR -->
+          <div class="card" style="border:1px solid var(--border2);padding:24px">
+            <div class="plan-name-label">Creator</div>
+            <div class="plan-price-big">€9<span style="font-size:22px;font-weight:600">,99</span></div>
+            <div class="plan-price-sub">/mois · sans engagement</div>
+            <div class="plan-tagline">Pour les créateurs qui veulent passer au niveau supérieur.</div>
+            <div class="plan-divider"></div>
+            <div style="display:flex;flex-direction:column;gap:9px;margin-bottom:24px">
+              <div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="7" fill="#22c55e" fill-opacity=".15"/><path d="M4 7l2 2 4-4" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>3 plateformes connectées</div>
+              <div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="7" fill="#22c55e" fill-opacity=".15"/><path d="M4 7l2 2 4-4" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>30 jours d'historique</div>
+              <div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="7" fill="#22c55e" fill-opacity=".15"/><path d="M4 7l2 2 4-4" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Dashboard complet</div>
+              <div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="7" fill="#22c55e" fill-opacity=".15"/><path d="M4 7l2 2 4-4" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Viral Score</div>
+              <div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="7" fill="#22c55e" fill-opacity=".15"/><path d="M4 7l2 2 4-4" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>20 analyses IA/mois</div>
+              <div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="7" fill="#22c55e" fill-opacity=".15"/><path d="M4 7l2 2 4-4" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Hooks IA</div>
+              <div class="pricing-feat-off"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="7" fill="currentColor" fill-opacity=".1"/><path d="M5 5l4 4M9 5l-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Rapport hebdo auto</div>
             </div>
-            <div style="margin-bottom:20px;display:flex;flex-direction:column;gap:8px">
-              <div class="pricing-feat">✓ 5 plateformes connectées</div>
-              <div class="pricing-feat">✓ 90 jours d'historique</div>
-              <div class="pricing-feat">✓ Dashboard complet</div>
-              <div class="pricing-feat">✓ Analyseur IA titres</div>
-              <div class="pricing-feat">✓ Viral Score prédictif</div>
-              <div class="pricing-feat">✓ Hooks IA viraux</div>
-              <div class="pricing-feat">✓ Rapport hebdo auto</div>
-              <div class="pricing-feat">✓ Media Kit IA</div>
+            <button class="btn" style="width:100%;border-color:rgba(124,92,252,0.35);color:var(--accent2)" id="plan-creator-btn" onclick="selectPlan('creator')">Passer Creator →</button>
+          </div>
+
+          <!-- PRO (featured) -->
+          <div class="card plan-card-pro" style="border:1px solid var(--accent);padding:24px;background:linear-gradient(160deg,rgba(124,92,252,0.08) 0%,var(--bg2) 60%);position:relative;box-shadow:0 0 0 1px rgba(124,92,252,0.3),0 8px 32px rgba(124,92,252,0.15)">
+            <div class="plan-badge plan-badge-popular">⚡ Le plus populaire</div>
+            <div class="plan-name-label" style="color:var(--accent2)">Pro</div>
+            <div class="plan-price-big" style="color:var(--accent2)">€19<span style="font-size:22px;font-weight:600">,99</span></div>
+            <div class="plan-price-sub">/mois · sans engagement</div>
+            <div class="plan-tagline" style="color:var(--text2)">Tout ce qu'il faut pour <strong>exploser tes stats</strong> et monétiser ton audience.</div>
+            <div class="plan-divider" style="background:rgba(124,92,252,0.2)"></div>
+            <div style="display:flex;flex-direction:column;gap:9px;margin-bottom:24px">
+              <div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="7" fill="#7c5cfc" fill-opacity=".25"/><path d="M4 7l2 2 4-4" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>5 plateformes connectées</div>
+              <div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="7" fill="#7c5cfc" fill-opacity=".25"/><path d="M4 7l2 2 4-4" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>90 jours d'historique</div>
+              <div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="7" fill="#7c5cfc" fill-opacity=".25"/><path d="M4 7l2 2 4-4" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><strong style="color:var(--accent2)">Analyses IA illimitées</strong></div>
+              <div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="7" fill="#7c5cfc" fill-opacity=".25"/><path d="M4 7l2 2 4-4" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Viral Score avancé</div>
+              <div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="7" fill="#7c5cfc" fill-opacity=".25"/><path d="M4 7l2 2 4-4" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><strong style="color:var(--accent2)">Hooks IA illimités</strong></div>
+              <div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="7" fill="#7c5cfc" fill-opacity=".25"/><path d="M4 7l2 2 4-4" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Rapport hebdo automatique</div>
+              <div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="7" fill="#7c5cfc" fill-opacity=".25"/><path d="M4 7l2 2 4-4" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Media Kit IA</div>
+              <div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="7" fill="#7c5cfc" fill-opacity=".25"/><path d="M4 7l2 2 4-4" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Alertes de croissance</div>
             </div>
-            <button class="btn btn-primary" style="width:100%" id="plan-pro-btn" onclick="selectPlan('pro')">Passer à Pro →</button>
+            <button class="btn btn-primary" style="width:100%;font-size:14px;padding:12px" id="plan-pro-btn" onclick="selectPlan('pro')">Choisir Pro →</button>
           </div>
 
           <!-- AGENCY -->
-          <div class="card" style="border:1px solid var(--border2)">
-            <div style="margin-bottom:20px">
-              <div style="font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px">Agency</div>
-              <div style="font-size:36px;font-weight:700">€49<span style="font-size:14px;font-weight:400;color:var(--text3)">/mois</span></div>
+          <div class="card" style="border:1px solid var(--border2);padding:24px">
+            <div class="plan-badge plan-badge-agency">🏢 Agences</div>
+            <div class="plan-name-label">Agency</div>
+            <div class="plan-price-big">€49<span style="font-size:22px;font-weight:600">,99</span></div>
+            <div class="plan-price-sub">/mois · jusqu'à 20 créateurs</div>
+            <div class="plan-tagline">Gérez plusieurs talents depuis un seul dashboard, en marque blanche.</div>
+            <div class="plan-divider"></div>
+            <div style="display:flex;flex-direction:column;gap:9px;margin-bottom:24px">
+              <div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="7" fill="#22c55e" fill-opacity=".15"/><path d="M4 7l2 2 4-4" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Plateformes illimitées</div>
+              <div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="7" fill="#22c55e" fill-opacity=".15"/><path d="M4 7l2 2 4-4" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>365 jours d'historique</div>
+              <div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="7" fill="#22c55e" fill-opacity=".15"/><path d="M4 7l2 2 4-4" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Jusqu'à 20 créateurs</div>
+              <div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="7" fill="#22c55e" fill-opacity=".15"/><path d="M4 7l2 2 4-4" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>White Label</div>
+              <div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="7" fill="#22c55e" fill-opacity=".15"/><path d="M4 7l2 2 4-4" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>API Access</div>
+              <div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="7" fill="#22c55e" fill-opacity=".15"/><path d="M4 7l2 2 4-4" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Export CSV / PDF</div>
+              <div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="7" fill="#22c55e" fill-opacity=".15"/><path d="M4 7l2 2 4-4" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Rapports clients auto</div>
+              <div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="7" fill="#22c55e" fill-opacity=".15"/><path d="M4 7l2 2 4-4" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Support prioritaire</div>
             </div>
-            <div style="margin-bottom:20px;display:flex;flex-direction:column;gap:8px">
-              <div class="pricing-feat">✓ Plateformes illimitées</div>
-              <div class="pricing-feat">✓ 365 jours d'historique</div>
-              <div class="pricing-feat">✓ Tout le plan Pro</div>
-              <div class="pricing-feat">✓ Multi-créateurs</div>
-              <div class="pricing-feat">✓ Export CSV/PDF</div>
-              <div class="pricing-feat">✓ API access</div>
-              <div class="pricing-feat">✓ Support prioritaire</div>
-              <div class="pricing-feat">✓ White-label</div>
-            </div>
-            <button class="btn" style="width:100%;border-color:rgba(124,92,252,0.4);color:var(--accent2)" id="plan-agency-btn" onclick="selectPlan('agency')">Passer à Agency →</button>
+            <button class="btn" style="width:100%;border-color:rgba(124,92,252,0.35);color:var(--accent2)" id="plan-agency-btn" onclick="selectPlan('agency')">Contacter les ventes →</button>
           </div>
 
         </div>
 
-        <div style="text-align:center;margin-top:24px;font-size:12px;color:var(--text3)">
-          Paiement sécurisé par Stripe · Annulation en 1 clic · Remboursement 14 jours
+        <!-- Guarantee bar -->
+        <div class="guarantee-bar">
+          <div style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text3)">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 1L2 3.5v4c0 3.1 2.4 5.9 5.5 6.5C10.6 13.4 13 10.6 13 7.5v-4L7.5 1z" stroke="#22c55e" stroke-width="1.3" fill="rgba(34,197,94,0.1)"/><path d="M5 7.5l2 2 3-3" stroke="#22c55e" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Paiement 100% sécurisé via Stripe
+          </div>
+          <div style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text3)">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="6" stroke="#a78bfa" stroke-width="1.3" fill="rgba(167,139,250,0.1)"/><path d="M7.5 4v4l2.5 1.5" stroke="#a78bfa" stroke-width="1.3" stroke-linecap="round"/></svg>
+            Annulation en 1 clic, sans condition
+          </div>
+          <div style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text3)">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 8l3.5 3.5L13 4" stroke="#f59e0b" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Remboursement sous 14 jours, sans question
+          </div>
+          <div style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text3)">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="2" y="5" width="11" height="8" rx="1.5" stroke="#3b82f6" stroke-width="1.3" fill="rgba(59,130,246,0.1)"/><path d="M5 5V4a2.5 2.5 0 015 0v1" stroke="#3b82f6" stroke-width="1.3"/></svg>
+            Pas de CB requise pour le plan Free
+          </div>
+        </div>
+
+        <!-- Comparison table -->
+        <div style="margin-top:52px">
+          <h3 style="font-size:18px;font-weight:700;margin-bottom:6px;letter-spacing:-0.01em">Comparaison détaillée</h3>
+          <p style="font-size:13px;color:var(--text3);margin-bottom:20px">Tout ce qui est inclus dans chaque plan.</p>
+          <div style="overflow-x:auto">
+            <table class="compare-table">
+              <thead>
+                <tr>
+                  <th style="width:36%">Fonctionnalité</th>
+                  <th class="plan-col" style="width:16%">Free</th>
+                  <th class="plan-col" style="width:16%">Creator</th>
+                  <th class="plan-col compare-pro-col" style="width:16%;color:var(--accent2)">⚡ Pro</th>
+                  <th class="plan-col" style="width:16%">Agency</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="section-row"><td colspan="5">Plateformes & données</td></tr>
+                <tr>
+                  <td>Plateformes connectées</td>
+                  <td class="plan-col">1</td>
+                  <td class="plan-col">3</td>
+                  <td class="plan-col compare-pro-col" style="color:var(--accent2);font-weight:600">5</td>
+                  <td class="plan-col">Illimitées</td>
+                </tr>
+                <tr>
+                  <td>Historique des stats</td>
+                  <td class="plan-col">7 jours</td>
+                  <td class="plan-col">30 jours</td>
+                  <td class="plan-col compare-pro-col" style="color:var(--accent2);font-weight:600">90 jours</td>
+                  <td class="plan-col">365 jours</td>
+                </tr>
+                <tr>
+                  <td>Export CSV / PDF</td>
+                  <td class="plan-col"><span class="compare-dash">—</span></td>
+                  <td class="plan-col"><span class="compare-dash">—</span></td>
+                  <td class="plan-col compare-pro-col"><span class="compare-dash">—</span></td>
+                  <td class="plan-col"><span class="compare-check">✓</span></td>
+                </tr>
+                <tr class="section-row"><td colspan="5">Intelligence Artificielle</td></tr>
+                <tr>
+                  <td>Analyses IA (titres, descriptions)</td>
+                  <td class="plan-col">5/mois</td>
+                  <td class="plan-col">20/mois</td>
+                  <td class="plan-col compare-pro-col" style="color:var(--accent2);font-weight:600">Illimitées</td>
+                  <td class="plan-col">Illimitées</td>
+                </tr>
+                <tr>
+                  <td>Viral Score prédictif</td>
+                  <td class="plan-col"><span class="compare-dash">—</span></td>
+                  <td class="plan-col"><span class="compare-check">✓</span></td>
+                  <td class="plan-col compare-pro-col"><span class="compare-check">✓</span> Avancé</td>
+                  <td class="plan-col"><span class="compare-check">✓</span></td>
+                </tr>
+                <tr>
+                  <td>Générateur de hooks IA</td>
+                  <td class="plan-col"><span class="compare-dash">—</span></td>
+                  <td class="plan-col"><span class="compare-check">✓</span></td>
+                  <td class="plan-col compare-pro-col" style="color:var(--accent2);font-weight:600">Illimité</td>
+                  <td class="plan-col">Illimité</td>
+                </tr>
+                <tr>
+                  <td>Rapport hebdomadaire auto</td>
+                  <td class="plan-col"><span class="compare-dash">—</span></td>
+                  <td class="plan-col"><span class="compare-dash">—</span></td>
+                  <td class="plan-col compare-pro-col"><span class="compare-check">✓</span></td>
+                  <td class="plan-col"><span class="compare-check">✓</span></td>
+                </tr>
+                <tr>
+                  <td>Media Kit IA</td>
+                  <td class="plan-col"><span class="compare-dash">—</span></td>
+                  <td class="plan-col"><span class="compare-dash">—</span></td>
+                  <td class="plan-col compare-pro-col"><span class="compare-check">✓</span></td>
+                  <td class="plan-col"><span class="compare-check">✓</span></td>
+                </tr>
+                <tr>
+                  <td>Alertes de croissance</td>
+                  <td class="plan-col"><span class="compare-dash">—</span></td>
+                  <td class="plan-col"><span class="compare-dash">—</span></td>
+                  <td class="plan-col compare-pro-col"><span class="compare-check">✓</span></td>
+                  <td class="plan-col"><span class="compare-check">✓</span></td>
+                </tr>
+                <tr class="section-row"><td colspan="5">Agency</td></tr>
+                <tr>
+                  <td>Multi-créateurs</td>
+                  <td class="plan-col"><span class="compare-dash">—</span></td>
+                  <td class="plan-col"><span class="compare-dash">—</span></td>
+                  <td class="plan-col compare-pro-col"><span class="compare-dash">—</span></td>
+                  <td class="plan-col">Jusqu'à 20</td>
+                </tr>
+                <tr>
+                  <td>White Label</td>
+                  <td class="plan-col"><span class="compare-dash">—</span></td>
+                  <td class="plan-col"><span class="compare-dash">—</span></td>
+                  <td class="plan-col compare-pro-col"><span class="compare-dash">—</span></td>
+                  <td class="plan-col"><span class="compare-check">✓</span></td>
+                </tr>
+                <tr>
+                  <td>API Access</td>
+                  <td class="plan-col"><span class="compare-dash">—</span></td>
+                  <td class="plan-col"><span class="compare-dash">—</span></td>
+                  <td class="plan-col compare-pro-col"><span class="compare-dash">—</span></td>
+                  <td class="plan-col"><span class="compare-check">✓</span></td>
+                </tr>
+                <tr>
+                  <td>Rapports clients auto</td>
+                  <td class="plan-col"><span class="compare-dash">—</span></td>
+                  <td class="plan-col"><span class="compare-dash">—</span></td>
+                  <td class="plan-col compare-pro-col"><span class="compare-dash">—</span></td>
+                  <td class="plan-col"><span class="compare-check">✓</span></td>
+                </tr>
+                <tr>
+                  <td>Support prioritaire</td>
+                  <td class="plan-col"><span class="compare-dash">—</span></td>
+                  <td class="plan-col"><span class="compare-dash">—</span></td>
+                  <td class="plan-col compare-pro-col"><span class="compare-dash">—</span></td>
+                  <td class="plan-col"><span class="compare-check">✓</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div style="margin-top:56px">
+          <h3 style="font-size:18px;font-weight:700;margin-bottom:6px;letter-spacing:-0.01em">Questions fréquentes</h3>
+          <p style="font-size:13px;color:var(--text3);margin-bottom:24px">Tout ce que tu dois savoir avant de te lancer.</p>
+          <div id="faq-list">
+            <div class="faq-item">
+              <div class="faq-q" onclick="toggleFaq(this)">
+                Est-ce que je peux annuler à tout moment ?
+                <span class="faq-icon">+</span>
+              </div>
+              <div class="faq-a">Oui, sans condition et sans frais. Tu peux annuler depuis ton tableau de bord en 1 clic. Ton accès reste actif jusqu'à la fin de la période payée.</div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q" onclick="toggleFaq(this)">
+                Comment fonctionne l'IA ?
+                <span class="faq-icon">+</span>
+              </div>
+              <div class="faq-a">CreatorStats utilise Claude (Anthropic) pour analyser tes titres, descriptions, et stats. Il détecte les patterns qui font performer et te donne des recommandations concrètes — pas des généralités.</div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q" onclick="toggleFaq(this)">
+                Quelles plateformes sont supportées ?
+                <span class="faq-icon">+</span>
+              </div>
+              <div class="faq-a">TikTok, Instagram, YouTube, Twitch et Kick. D'autres plateformes arrivent prochainement (Snapchat, X, LinkedIn).</div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q" onclick="toggleFaq(this)">
+                Mes données sont-elles sécurisées ?
+                <span class="faq-icon">+</span>
+              </div>
+              <div class="faq-a">Absolument. Toutes les données transitent via HTTPS et sont stockées dans Supabase (infrastructure sécurisée basée sur PostgreSQL). Nous ne revendons jamais tes données.</div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q" onclick="toggleFaq(this)">
+                Puis-je changer de plan à tout moment ?
+                <span class="faq-icon">+</span>
+              </div>
+              <div class="faq-a">Oui. L'upgrade est immédiat, le downgrade prend effet à la prochaine date de renouvellement. La différence est proratisée automatiquement.</div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q" onclick="toggleFaq(this)">
+                Le plan Agency est-il fait pour moi ?
+                <span class="faq-icon">+</span>
+              </div>
+              <div class="faq-a">Si tu gères plusieurs créateurs (talent management, MCN, agence influence), oui. Tu peux suivre jusqu'à 20 profils depuis un seul dashboard et envoyer des rapports en marque blanche à tes clients.</div>
+            </div>
+          </div>
         </div>
 
         <!-- Billing portal -->
-        <div id="billing-portal-section" style="display:none;margin-top:24px;text-align:center">
+        <div id="billing-portal-section" style="display:none;margin-top:32px;text-align:center">
           <button class="btn" onclick="openBillingPortal()">⚙️ Gérer mon abonnement</button>
         </div>
       </div>
@@ -1752,25 +2006,43 @@ function updatePlanUI(plan) {
   const portalSection = document.getElementById('billing-portal-section');
   if (!nameEl) return;
 
-  if (plan === 'pro') {
+  // Reset all buttons
+  const btns = {
+    free: document.getElementById('plan-free-btn'),
+    creator: document.getElementById('plan-creator-btn'),
+    pro: document.getElementById('plan-pro-btn'),
+    agency: document.getElementById('plan-agency-btn'),
+  };
+  const defaults = { free: 'Commencer gratuitement', creator: 'Passer Creator →', pro: 'Choisir Pro →', agency: 'Contacter les ventes →' };
+  Object.keys(btns).forEach(k => { if (btns[k]) { btns[k].disabled = false; btns[k].textContent = defaults[k]; } });
+
+  if (plan === 'creator') {
+    nameEl.textContent = 'Plan Creator ✓';
+    subEl.textContent = 'Features actives';
+    if (portalSection) portalSection.style.display = 'block';
+    if (btns.creator) { btns.creator.textContent = 'Plan actuel'; btns.creator.disabled = true; }
+  } else if (plan === 'pro') {
     nameEl.textContent = 'Plan Pro ✓';
     subEl.textContent = 'Toutes les features actives';
     if (portalSection) portalSection.style.display = 'block';
-    document.getElementById('plan-pro-btn').textContent = 'Plan actuel';
-    document.getElementById('plan-pro-btn').disabled = true;
-    document.getElementById('plan-agency-btn').textContent = 'Passer à Agency →';
-    document.getElementById('plan-free-btn').textContent = 'Rétrograder';
+    if (btns.pro) { btns.pro.textContent = 'Plan actuel'; btns.pro.disabled = true; }
   } else if (plan === 'agency') {
     nameEl.textContent = 'Plan Agency ✓';
     subEl.textContent = 'Accès complet';
     if (portalSection) portalSection.style.display = 'block';
-    document.getElementById('plan-agency-btn').textContent = 'Plan actuel';
-    document.getElementById('plan-agency-btn').disabled = true;
+    if (btns.agency) { btns.agency.textContent = 'Plan actuel'; btns.agency.disabled = true; }
   } else {
     nameEl.textContent = 'Plan Free';
     subEl.textContent = 'Passer à Pro →';
     if (portalSection) portalSection.style.display = 'none';
   }
+}
+
+function toggleFaq(el) {
+  const item = el.parentElement;
+  const wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+  if (!wasOpen) item.classList.add('open');
 }
 
 async function selectPlan(plan) {
