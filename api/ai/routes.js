@@ -8,15 +8,9 @@ router.post('/chat', requireAuth, async (req, res, next) => {
     const { prompt, systemPrompt } = req.body;
     if (!prompt) return res.status(400).json({ error: 'prompt required' });
 
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('anthropic_api_key')
-      .eq('id', req.user.id)
-      .single();
-
-    const anthropicKey = profile?.anthropic_api_key;
+    const anthropicKey = process.env.ANTHROPIC_API_KEY;
     if (!anthropicKey) {
-      return res.status(402).json({ error: 'no_api_key', message: 'Aucune clé API Anthropic configurée' });
+      return res.status(402).json({ error: 'no_api_key', message: 'Clé API Anthropic non configurée côté serveur' });
     }
 
     const upstream = await fetch('https://api.anthropic.com/v1/messages', {
