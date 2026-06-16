@@ -1414,6 +1414,12 @@ window.addEventListener('load', async () => {
   const hasSupabaseSession = await initSupabase();
   if (hasSupabaseSession) {
     enterDashboard();
+    // Check for Stripe success redirect
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('upgrade') === 'success') {
+      history.replaceState({}, '', '/');
+      setTimeout(() => showUpgradeSuccess(), 800);
+    }
   } else {
     // Fallback: localStorage session (demo mode)
     const saved = loadSession();
@@ -1425,6 +1431,24 @@ window.addEventListener('load', async () => {
     if (menu && !avatar.contains(e.target)) menu.classList.remove('open');
   });
 });
+
+function showUpgradeSuccess() {
+  const plan = currentPlan || 'pro';
+  const names = { creator: 'Creator', pro: 'Pro', agency: 'Agency' };
+  const el = document.createElement('div');
+  el.innerHTML = `
+    <div style="position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:2000;display:flex;align-items:center;justify-content:center;padding:20px" onclick="this.remove()">
+      <div style="background:var(--bg2);border:1px solid rgba(124,92,252,0.4);border-radius:16px;padding:40px;max-width:420px;width:100%;text-align:center;box-shadow:0 0 60px rgba(124,92,252,0.2)" onclick="event.stopPropagation()">
+        <div style="font-size:48px;margin-bottom:16px">🎉</div>
+        <h2 style="font-size:22px;font-weight:700;margin-bottom:8px">Bienvenue sur le plan ${names[plan] || 'Pro'} !</h2>
+        <p style="color:var(--text3);font-size:14px;line-height:1.6;margin-bottom:28px">Ton abonnement est actif. Toutes les features sont maintenant débloquées — analyse IA, Viral Score, Hooks et plus encore.</p>
+        <button class="btn btn-primary" style="width:100%;font-size:14px;padding:12px" onclick="this.closest('[style*=fixed]').remove();showPage('ai',null)">Commencer à analyser →</button>
+        <button class="btn" style="width:100%;margin-top:8px" onclick="this.closest('[style*=fixed]').remove()">Fermer</button>
+      </div>
+    </div>`;
+  document.body.appendChild(el.firstElementChild);
+  loadUserPlan();
+}
 
 function loadSession() {
   try { return JSON.parse(localStorage.getItem('cs_session')); } catch { return null; }
