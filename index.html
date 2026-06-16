@@ -1606,7 +1606,7 @@ function enterDashboard() {
   // Ask for API key if not set
   const savedKey = localStorage.getItem('cs_api_key');
   if (savedKey) { apiKey = savedKey; }
-  else if (currentUser.provider !== 'demo') {
+  else if (!_session && currentUser.provider !== 'demo') {
     setTimeout(() => { document.getElementById('api-key-modal').classList.add('show'); }, 600);
   }
 }
