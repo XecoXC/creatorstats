@@ -2,9 +2,12 @@ const router = require('express').Router();
 const supabase = require('../../lib/supabase');
 const { requireAuth } = require('../middleware/auth');
 
+// YouTube dedicated routes (has its own OAuth flow)
+router.use('/youtube', require('./youtube'));
+
 router.use(requireAuth);
 
-const SUPPORTED = ['tiktok', 'instagram', 'youtube', 'twitch', 'kick'];
+const SUPPORTED = ['tiktok', 'instagram', 'twitch', 'kick'];
 
 // GET /api/platforms/:platform/stats
 router.get('/:platform/stats', async (req, res, next) => {
