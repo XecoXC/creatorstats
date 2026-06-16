@@ -1,7 +1,7 @@
 const supabase = require('../../lib/supabase');
 
 async function requireAuth(req, res, next) {
-  const token = req.headers.authorization?.replace('Bearer ', '');
+  const token = req.headers.authorization?.replace('Bearer ', '') || req.query.token;
   if (!token) return res.status(401).json({ error: 'Unauthorized' });
 
   const { data: { user }, error } = await supabase.auth.getUser(token);

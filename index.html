@@ -1414,11 +1414,18 @@ window.addEventListener('load', async () => {
   const hasSupabaseSession = await initSupabase();
   if (hasSupabaseSession) {
     enterDashboard();
-    // Check for Stripe success redirect
     const params = new URLSearchParams(window.location.search);
     if (params.get('upgrade') === 'success') {
       history.replaceState({}, '', '/');
       setTimeout(() => showUpgradeSuccess(), 800);
+    }
+    if (params.get('yt_connected') === '1') {
+      history.replaceState({}, '', '/');
+      setTimeout(() => { showToast('✅ YouTube connecté ! Tes vraies stats sont disponibles.'); showPage('platforms', null); }, 800);
+    }
+    if (params.get('yt_error')) {
+      history.replaceState({}, '', '/');
+      setTimeout(() => showToast('❌ Erreur connexion YouTube. Réessaie.'), 800);
     }
   } else {
     // Fallback: localStorage session (demo mode)
@@ -1710,6 +1717,7 @@ const platData = {
 function switchPlatDetail(plat, el) {
   document.querySelectorAll('.plat-tab').forEach(t=>t.classList.remove('active'));
   if(el) el.classList.add('active');
+  if (plat === 'youtube' && _session) { renderYouTubePlatDetail(); return; }
   renderPlatDetail(plat);
 }
 function renderPlatDetail(plat) {
@@ -1740,6 +1748,97 @@ function renderPlatDetail(plat) {
     const data = Array.from({length:10},(_,i)=>Math.round(base+(end-base)*(i/9)));
     new Chart(ctx, {type:'line',data:{labels:['1 mai','5','10','15','20','25','30','5 jun','10','13'],datasets:[{label:p.name,data,borderColor:p.color,backgroundColor:'transparent',tension:0.4,pointRadius:3,pointBackgroundColor:p.color}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#5a5a6a',font:{size:11}}},y:{ticks:{color:'#5a5a6a',font:{size:11},callback:v=>Math.round(v/1000)+'K'},grid:{color:'rgba(255,255,255,0.04)'}}}}});
   },100);
+}
+
+async function renderYouTubePlatDetail() {
+  const el = document.getElementById('plat-detail-content');
+  el.innerHTML = `<div style="padding:40px;text-align:center;color:var(--text3)">Chargement des stats YouTube...</div>`;
+  try {
+    const res = await fetch('/api/platforms/youtube/stats', {
+      headers: { Authorization: `Bearer ${_session.access_token}` }
+    });
+    const data = await res.json();
+
+    if (!data.channel) {
+      // Not connected — show connect button
+      el.innerHTML = `
+        <div class="card" style="text-align:center;padding:48px">
+          <div style="font-size:40px;margin-bottom:16px">▶️</div>
+          <h3 style="font-size:18px;font-weight:700;margin-bottom:8px">Connecte ta chaîne YouTube</h3>
+          <p style="color:var(--text3);font-size:13px;max-width:360px;margin:0 auto 24px;line-height:1.6">Accède à tes vraies stats — abonnés, vues, engagement — directement depuis ton dashboard.</p>
+          <button class="btn btn-primary" style="padding:10px 24px" onclick="connectYouTube()">
+            Connecter YouTube →
+          </button>
+        </div>`;
+      return;
+    }
+
+    const ch = data.channel;
+    const latest = data.stats?.[0] || {};
+    const fmt = n => n >= 1000000 ? (n/1000000).toFixed(1)+'M' : n >= 1000 ? (n/1000).toFixed(1)+'K' : n;
+
+    el.innerHTML = `
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px">
+        <div style="width:44px;height:44px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:20px">▶️</div>
+        <div>
+          <div style="font-size:16px;font-weight:600">${ch.username}</div>
+          <div style="font-size:12px;color:var(--text3)">Connecté · <a href="#" onclick="syncYouTube()" style="color:var(--accent2);text-decoration:none">Synchroniser</a></div>
+        </div>
+      </div>
+      <div class="metrics-grid">
+        <div class="metric"><div class="metric-label">Abonnés</div><div class="metric-val">${fmt(latest.followers||0)}</div><div class="metric-delta delta-up">Données réelles</div></div>
+        <div class="metric"><div class="metric-label">Vues totales</div><div class="metric-val">${fmt(latest.views||0)}</div><div class="metric-delta delta-up">▲ depuis le début</div></div>
+        <div class="metric"><div class="metric-label">Likes récents</div><div class="metric-val">${fmt(latest.likes||0)}</div><div class="metric-delta delta-flat">10 dernières vidéos</div></div>
+        <div class="metric"><div class="metric-label">Engagement</div><div class="metric-val">${latest.engagement_rate||0}%</div><div class="metric-delta delta-flat">Taux moyen</div></div>
+      </div>
+      ${data.stats?.length > 1 ? `
+      <div class="card">
+        <div class="card-head"><div class="card-title">Évolution abonnés — YouTube</div></div>
+        <div style="position:relative;height:180px"><canvas id="yt-chart"></canvas></div>
+      </div>` : ''}
+      <div style="text-align:right;margin-top:8px">
+        <button class="btn" onclick="disconnectYouTube()" style="font-size:12px;color:var(--text3)">Déconnecter</button>
+      </div>`;
+
+    if (data.stats?.length > 1) {
+      setTimeout(() => {
+        const ctx = document.getElementById('yt-chart');
+        if (!ctx) return;
+        const labels = data.stats.slice(0,10).reverse().map(s => new Date(s.recorded_at).toLocaleDateString('fr',{day:'numeric',month:'short'}));
+        const vals = data.stats.slice(0,10).reverse().map(s => s.followers);
+        new Chart(ctx, {type:'line',data:{labels,datasets:[{label:'Abonnés',data:vals,borderColor:'#ff0000',backgroundColor:'rgba(255,0,0,0.05)',tension:0.4,pointRadius:3,pointBackgroundColor:'#ff0000'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#5a5a6a',font:{size:11}}},y:{ticks:{color:'#5a5a6a',font:{size:11},callback:v=>Math.round(v/1000)+'K'},grid:{color:'rgba(255,255,255,0.04)'}}}}});
+      }, 100);
+    }
+  } catch(e) {
+    el.innerHTML = `<div class="card" style="text-align:center;padding:32px;color:var(--text3)">Erreur lors du chargement des stats YouTube.</div>`;
+  }
+}
+
+async function syncYouTube() {
+  if (!_session) return;
+  try {
+    await fetch('/api/platforms/youtube/sync', { method:'POST', headers:{ Authorization:`Bearer ${_session.access_token}` } });
+    renderYouTubePlatDetail();
+  } catch(e) {}
+}
+
+async function disconnectYouTube() {
+  if (!_session) return;
+  await fetch('/api/platforms/youtube/disconnect', { method:'DELETE', headers:{ Authorization:`Bearer ${_session.access_token}` } });
+  renderYouTubePlatDetail();
+}
+
+function connectYouTube() {
+  if (!_session) return;
+  window.location.href = `/api/platforms/youtube/auth?token=${_session.access_token}`;
+}
+
+function showToast(msg, duration = 4000) {
+  const t = document.createElement('div');
+  t.textContent = msg;
+  t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--border2);color:var(--text);padding:12px 20px;border-radius:10px;font-size:13px;z-index:3000;box-shadow:0 4px 20px rgba(0,0,0,0.4);white-space:nowrap;transition:opacity 0.3s';
+  document.body.appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, duration);
 }
 
 // ─── Charts ───────────────────────────────────────
