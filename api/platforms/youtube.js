@@ -49,8 +49,11 @@ router.get('/callback', async (req, res) => {
     // Fetch channel info
     const channel = await fetchYouTubeChannel(tokens.access_token);
 
+    // Ensure profile exists (FK requirement)
+    await supabase.from('profiles').upsert({ id: uid }, { onConflict: 'id', ignoreDuplicates: true });
+
     // Store in Supabase
-    await supabase.from('connected_platforms').upsert({
+    const { error: upsertErr } = await supabase.from('connected_platforms').upsert({
       user_id: uid, platform: 'youtube',
       username: channel.title,
       platform_user_id: channel.id,
@@ -58,6 +61,8 @@ router.get('/callback', async (req, res) => {
       refresh_token: tokens.refresh_token || null,
       connected_at: new Date().toISOString(),
     }, { onConflict: 'user_id,platform' });
+
+    if (upsertErr) throw new Error(`Supabase upsert failed: ${upsertErr.message}`);
 
     // Store initial stats snapshot
     await storeYouTubeStats(uid, channel, tokens.access_token);
