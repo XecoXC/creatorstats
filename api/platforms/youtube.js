@@ -56,16 +56,19 @@ router.get('/callback', async (req, res) => {
     await supabase.from('profiles').upsert({ id: uid }, { onConflict: 'id', ignoreDuplicates: true });
 
     // Store in Supabase
-    const { error: upsertErr } = await supabase.from('connected_platforms').upsert({
+    console.log('[YT callback] supabase url:', process.env.SUPABASE_URL);
+    console.log('[YT callback] service key present:', !!process.env.SUPABASE_SERVICE_ROLE_KEY);
+    const { data: upsertData, error: upsertErr } = await supabase.from('connected_platforms').upsert({
       user_id: uid, platform: 'youtube',
       username: channel.title,
       platform_user_id: channel.id,
       access_token: tokens.access_token,
       refresh_token: tokens.refresh_token || null,
       connected_at: new Date().toISOString(),
-    }, { onConflict: 'user_id,platform' });
+    }, { onConflict: 'user_id,platform' }).select();
 
     console.log('[YT callback] upsert error:', upsertErr?.message || 'none');
+    console.log('[YT callback] upsert data:', JSON.stringify(upsertData));
     if (upsertErr) throw new Error(`Supabase upsert failed: ${upsertErr.message}`);
 
     // Store initial stats snapshot
