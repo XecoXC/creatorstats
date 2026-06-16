@@ -127,13 +127,14 @@ router.get('/stats', requireAuth, async (req, res, next) => {
       .order('recorded_at', { ascending: false })
       .limit(90);
 
-    const { data: platform } = await supabase
+    const { data: platform, error: platErr } = await supabase
       .from('connected_platforms')
       .select('username, platform_user_id, connected_at')
       .eq('user_id', req.user.id)
       .eq('platform', 'youtube')
       .single();
 
+    console.log('[YT stats] user_id:', req.user.id, 'platform:', platform?.username || 'null', 'err:', platErr?.message || 'none');
     res.json({ stats: data || [], channel: platform || null });
   } catch (err) {
     next(err);
