@@ -1421,7 +1421,15 @@ window.addEventListener('load', async () => {
     }
     if (params.get('yt_connected') === '1') {
       history.replaceState({}, '', '/');
-      setTimeout(() => { showToast('✅ YouTube connecté ! Tes vraies stats sont disponibles.'); showPage('platforms', null); }, 800);
+      setTimeout(() => {
+        showToast('✅ YouTube connecté ! Tes vraies stats sont disponibles.');
+        showPage('platforms', null);
+        setTimeout(() => {
+          document.querySelectorAll('.plat-tab').forEach(t => t.classList.remove('active'));
+          const ytTab = Array.from(document.querySelectorAll('.plat-tab')).find(t => t.textContent === 'YouTube');
+          if (ytTab) { ytTab.classList.add('active'); renderYouTubePlatDetail(); }
+        }, 300);
+      }, 800);
     }
     if (params.get('yt_error')) {
       history.replaceState({}, '', '/');
