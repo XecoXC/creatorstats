@@ -33,6 +33,7 @@ router.get('/callback', async (req, res) => {
 
   try {
     const { uid } = JSON.parse(Buffer.from(state, 'base64url').toString());
+    console.log('[YT callback] uid:', uid);
 
     // Exchange code for tokens
     const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
@@ -44,10 +45,12 @@ router.get('/callback', async (req, res) => {
       }),
     });
     const tokens = await tokenRes.json();
+    console.log('[YT callback] token exchange status:', tokenRes.status, tokens.error || 'ok');
     if (!tokenRes.ok) throw new Error(tokens.error_description || 'token exchange failed');
 
     // Fetch channel info
     const channel = await fetchYouTubeChannel(tokens.access_token);
+    console.log('[YT callback] channel:', channel.title, channel.id);
 
     // Ensure profile exists (FK requirement)
     await supabase.from('profiles').upsert({ id: uid }, { onConflict: 'id', ignoreDuplicates: true });
@@ -62,6 +65,7 @@ router.get('/callback', async (req, res) => {
       connected_at: new Date().toISOString(),
     }, { onConflict: 'user_id,platform' });
 
+    console.log('[YT callback] upsert error:', upsertErr?.message || 'none');
     if (upsertErr) throw new Error(`Supabase upsert failed: ${upsertErr.message}`);
 
     // Store initial stats snapshot
